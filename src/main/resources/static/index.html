@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    </head>
+    <body>
+
+        <div class="container">
+            <p class="text-center">I am a tracker!</p>
+        </div>
+
+        <div class="container border border-info rounded">
+            <form>
+                <div class="form-group">
+                    <label for="name-input">Your Name</label>
+                    <input type="text" class="form-control" id="name-input" placeholder="Enter Name"/>
+                </div>
+                <label for="gender">Gender</label>
+                <div class="form-group" id="gender">
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender-input-female" value="F">
+                        <label class="form-check-label" for="gender-input-female">Female</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender-input-male" value="M">
+                        <label class="form-check-label" for="gender-input-male">Male</label>
+                    </div>
+                </div>
+                <label for="preferred_animal">If you wanted a pet animal, which one would you prefer?</label>
+                <div class="form-group" id="preferred_animal">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="preferred_animal_dog" value="F">
+                        <label class="form-check-label" for="preferred_animal_dog">A Dog</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="preferred_animal_cat" value="M">
+                        <label class="form-check-label" for="preferred_animal_cat">A Cat</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="preferred_animal_none" value="M">
+                        <label class="form-check-label" for="preferred_animal_none">Nope, I don't like pets!</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+
+    </body>
+</html>
