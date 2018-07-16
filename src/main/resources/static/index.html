@@ -3,56 +3,153 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+
+        <style>
+            body{
+                font-family: "American Typewriter";
+            }
+            .heading-font{
+                font-size: 50px;
+            }
+        </style>
     </head>
     <body>
 
         <div class="container">
-            <p class="text-center">I am a tracker!</p>
+            <p class="text-center heading-font">I am a tracker!</p>
         </div>
 
+
+
         <div class="container border border-info rounded">
-            <form>
+            <form action="/web-analytics/save" method="POST" role="form" id="wa-form">
+            <dl class="row">
+                <dt class="col-sm-2">&nbsp;</dt>
+                <dd class="col-sm-10">&nbsp;</dd>
+            </dl>
+            <dl class="row">
+                 <dt class="col-sm-3"><label for="name-input">Your Name</label></dt>
+                 <dd class="col-sm-9">
+                    <div class="form-group">
+                         <input type="text" class="form-control" name="name" id="name-input" placeholder="Enter Name"/>
+                     </div>
+                 </dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-3"><label for="gender">Gender that you identify with</label></dt>
+                <dd class="col-sm-9">
+                    <div class="form-group" id="gender">
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="gender-input-female" value="Female">
+                            <label class="form-check-label" for="gender-input-female">Female</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="gender-input-male" value="Male">
+                            <label class="form-check-label" for="gender-input-male">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="gender-input-nonbinary" value="Non-Binary">
+                            <label class="form-check-label" for="gender-input-nonbinary">Non-Binary</label>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-3"><label for="preferred_animal">If you wanted a pet animal, which one would you prefer?</label></dt>
+                <dd class="col-sm-9">
+                    <div class="form-group" id="preferred_animal">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="preferred_animal" id="preferred_animal_dog" value="Dog">
+                            <label class="form-check-label" for="preferred_animal_dog">A Dog</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="preferred_animal" id="preferred_animal_cat" value="Cat">
+                            <label class="form-check-label" for="preferred_animal_cat">A Cat</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="preferred_animal" id="preferred_animal_none" value="None">
+                            <label class="form-check-label" for="preferred_animal_none">Nope, I don't like pets!</label>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    <div class="form-group">
+                        <button type="button" id="saveButton" class="btn btn-primary">Submit</button>
+                    </div>
+                </dt>
+            </dl>
+
+
+            </form>
+            <!--<form action="/web-analytics/save" method="POST" role="form" id="wa-form">
                 <div class="form-group">
                     <label for="name-input">Your Name</label>
-                    <input type="text" class="form-control" id="name-input" placeholder="Enter Name"/>
+                    <input type="text" class="form-control" name="name" id="name-input" placeholder="Enter Name"/>
                 </div>
                 <label for="gender">Gender</label>
                 <div class="form-group" id="gender">
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender-input-female" value="F">
+                        <input class="form-check-input" type="radio" name="gender" id="gender-input-female" value="F">
                         <label class="form-check-label" for="gender-input-female">Female</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender-input-male" value="M">
+                        <input class="form-check-input" type="radio" name="gender" id="gender-input-male" value="M">
                         <label class="form-check-label" for="gender-input-male">Male</label>
                     </div>
                 </div>
                 <label for="preferred_animal">If you wanted a pet animal, which one would you prefer?</label>
                 <div class="form-group" id="preferred_animal">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="preferred_animal_dog" value="F">
+                        <input class="form-check-input" type="radio" name="preferred_animal" id="preferred_animal_dog" value="Dog">
                         <label class="form-check-label" for="preferred_animal_dog">A Dog</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="preferred_animal_cat" value="M">
+                        <input class="form-check-input" type="radio" name="preferred_animal" id="preferred_animal_cat" value="Cat">
                         <label class="form-check-label" for="preferred_animal_cat">A Cat</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="preferred_animal_none" value="M">
+                        <input class="form-check-input" type="radio" name="preferred_animal" id="preferred_animal_none" value="None">
                         <label class="form-check-label" for="preferred_animal_none">Nope, I don't like pets!</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary">Submit</button>
+                    <button type="button" id="saveButton" class="btn btn-primary">Submit</button>
                 </div>
-            </form>
+            </form>-->
+            <div id="thankyou" class="invisible">
+                <h4><p class="text-success font-weight-bold">Thank you!</p><h4>
+            </div>
+            <div id="error" class="invisible">
+                <h4><p class="text-danger font-weight-bold">Error :-( Please try again!</p><h4>
+            </div>
         </div>
+        <script>
+            $('#saveButton').on('click', function (e) {
+                console.log()
+                req = $.post('/web-analytics/save',{data:'{'+
+                    '"name":"'+$( "#wa-form" ).find( "input[name='name']" ).val()+'",'+
+                    '"gender":"'+$( "#wa-form" ).find( "input[name='gender']:checked" ).val()+'",'+
+                    '"preferred_animal":"'+$( "#wa-form" ).find( "input[name='preferred_animal']:checked" ).val()+'"}'});
+                req.done(function(){
+                    $("#thankyou").attr("class","visible");
+                    $("#error").attr("class","invisible");
+                });
+                req.fail(function(){
+                    $("#thankyou").attr("class","invisible");
+                    $("#error").attr("class","visible");
+                });
+
+            })
+        </script>
 
     </body>
 </html>

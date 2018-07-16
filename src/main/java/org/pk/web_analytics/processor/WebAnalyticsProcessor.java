@@ -61,23 +61,34 @@ public class WebAnalyticsProcessor {
 
         analyticsKStream.flatMap((s, analyticsString) -> {
             List<KeyValue<String, String>> analytics = new ArrayList<>();
-            Analytics analyticsMap = null;
+            Analytics analyticsObj = null;
 
             try {
-                analyticsMap = objectMapper.readValue(analyticsString, Analytics.class);
+                analyticsObj = objectMapper.readValue(analyticsString, Analytics.class);
 
-                analytics.add(new KeyValue<>("NAME", analyticsMap.getName()));
-                analytics.add(new KeyValue<>("PREFERRED_ANIMAL", analyticsMap.getPreferred_animal()));
-                analytics.add(new KeyValue<>("GENDER", analyticsMap.getGender()));
-                if(analyticsMap.getUser_agent().indexOf("Apple") >=0)
+                analytics.add(new KeyValue<>("NAME", analyticsObj.getName()));
+                analytics.add(new KeyValue<>("PREFERRED_ANIMAL", analyticsObj.getPreferred_animal()));
+                analytics.add(new KeyValue<>("GENDER", analyticsObj.getGender()));
+                if(analyticsObj.getUser_agent().indexOf("Macintosh") >=0)
                     analytics.add(new KeyValue<>("DEVICE", "Apple"));
-                else if(analyticsMap.getUser_agent().indexOf("Android") >=0)
-                    analytics.add(new KeyValue<>("DEVICE", "Android"));
+                else if(analyticsObj.getUser_agent().indexOf("iPhone") >=0)
+                    analytics.add(new KeyValue<>("DEVICE", "iPhone"));
+                else if(analyticsObj.getUser_agent().indexOf("Linux") >=0)
+                    analytics.add(new KeyValue<>("DEVICE", "Linux"));
+                else if(analyticsObj.getUser_agent().indexOf("Windows") >=0 || analyticsObj.getUser_agent().indexOf("windows") >=0)
+                    analytics.add(new KeyValue<>("DEVICE", "Windows"));
+                else
+                    analytics.add(new KeyValue<>("DEVICE", "No Idea!"));
 
-                if(analyticsMap.getUser_agent().indexOf("Chrome") >=0)
+
+                if(analyticsObj.getUser_agent().indexOf(" Chrome/") >=0)
                     analytics.add(new KeyValue<>("BROWSER", "Chrome"));
-                else if(analyticsMap.getUser_agent().indexOf("IE") >=0)
+                else if(analyticsObj.getUser_agent().indexOf(" Safari/") >=0 )
+                    analytics.add(new KeyValue<>("BROWSER", "Safari"));
+                else if(analyticsObj.getUser_agent().indexOf("MSIE") >=0 || analyticsObj.getUser_agent().indexOf("(Windows NT") >=0 )
                     analytics.add(new KeyValue<>("BROWSER", "IE"));
+                else
+                    analytics.add(new KeyValue<>("BROWSER", "No Idea!"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -149,13 +160,17 @@ public class WebAnalyticsProcessor {
     //Spring Jira: https://jira.spring.io/browse/SPR-10241
     //Converting Spring Enviroment to Properties Map
 
+    @SuppressWarnings("Duplicates")
     public static Map<String, String> getAllKnownProperties(Environment env) {
         Map<String, String> rtn = new HashMap<>();
         if (env instanceof ConfigurableEnvironment) {
             for (PropertySource<?> propertySource : ((ConfigurableEnvironment) env).getPropertySources()) {
                 if (propertySource instanceof EnumerablePropertySource) {
                     for (String key : ((EnumerablePropertySource) propertySource).getPropertyNames()) {
-                        rtn.put(key, propertySource.getProperty(key).toString());
+                        if(key.startsWith("consumer.")) {
+                            String nkey = key.replace("consumer.", "");
+                            rtn.put(nkey, propertySource.getProperty(key).toString());
+                        }
                     }
                 }
             }

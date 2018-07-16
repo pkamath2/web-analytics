@@ -10,7 +10,16 @@ public class Analytics {
     private String user_agent;
     private String preferred_animal;
     private String gender;
-    private String browser;
+
+    public Analytics() {
+    }
+
+    public Analytics(String name, String user_agent, String preferred_animal, String gender) {
+        this.name = name;
+        this.user_agent = user_agent;
+        this.preferred_animal = preferred_animal;
+        this.gender = gender;
+    }
 
     public String getName() {
         return name;
@@ -45,11 +54,4 @@ public class Analytics {
         this.preferred_animal = preferred_animal;
     }
 
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
 }

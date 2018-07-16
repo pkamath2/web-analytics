@@ -53,6 +53,17 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <appName>damp-springs-45748</appName>
+                    <processTypes>
+                        <web>java -jar target/web-analytics-1.0-SNAPSHOT.jar</web>
+                    </processTypes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

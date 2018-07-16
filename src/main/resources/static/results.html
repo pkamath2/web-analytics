@@ -3,15 +3,40 @@
     <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <link rel="stylesheet" href="/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
             <script src="/js/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
             <script src="/js/popper.min.js" crossorigin="anonymous"></script>
             <script src="/js/d3.v4.min.js"></script>
+            <style>
+                    body{
+                        font-family: "American Typewriter";
+                    }
+                    .bar, .dbar {
+                      fill: maroon;
+                    }
+                    .bar:hover, .dbar:hover {
+                      fill: grey;
+                    }
+            </style>
     </head>
     <body>
+            <div class="container">
+                    <div class="row">
+                        <p class="text-center"><h1>&nbsp;</h1></p>
+                    </div>
+            </div>
         <div class="container">
-            <p class="text-center"><h1>Tracker Analytics!</h1></p>
+            <div class="row">
+                <div class="col-4">&nbsp;</div>
+                <div class="col-4"><h1><p class="text-center">Tracker Analytics!</p></h1></div>
+                <div class="col-4">&nbsp;</div>
+            </div>
+        </div>
+        <div class="container">
+                <div class="row">
+                    <p class="text-center"><h1>&nbsp;</h1></p>
+                </div>
         </div>
         <div class="container">
             <div class="row">
@@ -19,44 +44,153 @@
                     <svg width="400" height="400"></svg>
                 </div>
                 <div id="animals-vbar" class="col-6">
-                    <svg width="500" height="500"></svg>
+                    <svg width="400" height="400"></svg>
                 </div>
             </div>
             <div class="row">
-                <div id="os-hbar" class="col-6" >
-                    <svg width="500" height="500"></svg>
+                <div id="device-hbar" class="col-6" >
+                    <svg width="400" height="400"></svg>
                 </div>
-                <div id="browser-scatter" class="col-6">
-                    <svg width="500" height="500"></svg>
+                <div id="browser-pie" class="col-6">
+                    <svg width="400" height="400"></svg>
                 </div>
             </div>
         </div>
     </body>
     <script>
-        var gender_color = d3.scaleSequential(d3.interpolateCool);
+        
         var gender = d3.select("#gender-pie").select("svg");
-
+        var gender_color = d3.scaleSequential(d3.interpolateCool);
         var gender_width = +gender.attr("width");
         var gender_height = +gender.attr("height");
         var gender_radius = Math.min(gender_width, gender_height) / 2;
         var gender_g = gender.append("g").attr("transform", "translate(" + gender_width / 2 + "," + gender_height / 2 + ")");
-        var gender_arcs = d3.pie().value((d) => {return d.value});
-        var path = d3.arc().outerRadius(gender_radius - 10).innerRadius(0);
+        var gender_pie = d3.pie().value((d) => {return d.value});
+        var gender_path = d3.arc().outerRadius(gender_radius - 10).innerRadius(0);
 
-        d3.json("/data/data.json",function(json) {
-            gender_entries = d3.entries(json["GENDER"]);  
+        
+        var animals = d3.select("#animals-vbar").select("svg");
+        var animals_width = animals.attr("width");
+        var animals_height = animals.attr("height");
+        var animals_x = d3.scaleBand().rangeRound([0, animals_width-50]).padding(0.1);
+        var animals_y = d3.scaleLinear().rangeRound([animals_height-50, 0]);
+        var animals_g = animals.append("g").attr("transform", "translate(50, 5)");
+
+
+        var device = d3.select("#device-hbar").select("svg");
+        var device_width = device.attr("width");
+        var device_height = device.attr("height");
+        var device_y = d3.scaleBand().rangeRound([0, animals_height-50]).padding(0.1);
+        var device_x = d3.scaleLinear().rangeRound([animals_width-50, 0]);
+        var device_g = device.append("g").attr("transform", "translate(50, 5)");
+
+
+        var browser = d3.select("#browser-pie").select("svg");
+        var browser_color = d3.scaleSequential(d3.interpolateCool);
+        var browser_width = browser.attr("width");
+        var browser_height = browser.attr("height");
+        var browser_radius = Math.min(browser_width, browser_height) / 2;
+        var browser_g = browser.append("g").attr("transform", "translate(" + browser_width / 2 + "," + browser_height / 2 + ")");
+        var browser_pie = d3.pie().value((d) => {return d.value});
+        var browser_path = d3.arc().outerRadius(browser_radius - 10).innerRadius(0);
+
+
+
+        d3.json("/web-analytics/get",function(json) {
+
+            //1. Gender Pie Chart
             var arc = gender_g.selectAll(".arc")
-                            .data(gender_arcs(gender_entries))
+                            .data(gender_pie(d3.entries(json["GENDER"])))
                                 .enter().append("g");
             arc.attr("class", "arc").append("path")
-                                    .attr("d", path)
+                                    .attr("d", gender_path)
                                     .attr("fill", (d) => {return gender_color(d.index*.5)});
             arc.append("text").text((d)=>{return d.data.key;})
-                                    .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+                                    .attr("transform", function(d) { return "translate(" + gender_path.centroid(d) + ")"; })
                                     .attr("font-weight", "bold")
-                                    .attr("dx","-1em")
-                                        
+                                    .attr("dx","-1em");
+
+            //2. Animals Vertical Bar Chart 
+            animals_data = d3.entries(json["PREFERRED_ANIMAL"]);
+            animals_x.domain(animals_data.map(function(d) {return d.key; }));
+            animals_y.domain([0, d3.max(animals_data, function(d) { return d.value; })]);
+
+            console.log(animals_data.length)
+            animals_g.append("g")
+                .attr("transform", "translate(-20," + (animals_height-21) + ")")
+                .call(d3.axisBottom(animals_x))
+                .attr("font-weight", "bold");
+            var animals_gg = animals_g.append("g")
+            var bar = animals_gg.selectAll(".bar")
+                                .data(animals_data)
+                                .enter().append("rect")
+                                    .attr("class","bar")
+                                    .attr("x",(d)=>{return animals_x(d.key)})
+                                    .attr("y",(d)=>{return animals_y(d.value);})
+                                    .attr("dx","-100em")
+                                    .attr("width", 240/(animals_data.length))
+                                    .attr("height", function(d) {return d.value==0?0:(animals_height - 20 - animals_y(d.value)); });
+
+            var rect_text = animals_gg.selectAll(".recttext")
+                                        .data(animals_data)
+                                        .enter().append("text").text((d)=>{return d.value==0?'':d.value;})
+                                    .attr("x",(d)=>{return animals_x(d.key) + 20})
+                                    .attr("y",(d)=>{return animals_y(d.value) + 40 ;})
+                                    //.attr("font-weight", "bold")
+                                    .attr("stroke", "white")
+                                    .attr("fill", "white")
+
+
+            //3. Device horizontal bars
+            device_data = d3.entries(json["DEVICE"]);
+            device_y.domain(device_data.map(function(d) {return d.key; }));
+            device_x.domain([0, d3.max(device_data, function(d) { return d.value; })]);
+
+            device_g.append("g")
+                .attr("transform", "translate(0,20)")
+                .call(d3.axisLeft(device_y))
+                .selectAll("text")
+                    //.attr("font-weight", "bold")
+                    .attr("transform", "rotate(90)") 
+                    .attr("dx", "3em") 
+                    .attr("dy", "2em") ;
+            var device_gg = device_g.append("g")
+            var device_bar = device_gg.selectAll(".dbar")
+                                .data(device_data)
+                                .enter().append("rect")
+                                    .attr("class","dbar")
+                                    .attr("x",(d)=>{return 0})
+                                    .attr("y",(d)=>{return device_y(d.key)+ 20;})
+                                    .attr("height", 240/(device_data.length))
+                                    .attr("width", function(d) {return d.value==0?0:(device_width - 20 - device_x(d.value)); });
+
+            var rect_d_text = device_gg.selectAll(".rectdtext")
+                                        .data(device_data)
+                                        .enter().append("text").text((d)=>{return d.value==0?'':d.value;})
+                                    .attr("x",(d)=>{return device_width - device_x(d.value) - 70;})
+                                    .attr("y",(d)=>{console.log(device_width - device_x(d.value)) ;return device_y(d.key) + 60 ;})
+                                    //.attr("font-weight", "bold")
+                                    .attr("stroke", "white")
+                                    .attr("fill", "white")   
+
+
+            //4. Browser Pie Chart
+         var browser_arc = browser_g.selectAll(".barc")
+                            .data(browser_pie(d3.entries(json["BROWSER"])))
+                                .enter().append("g");
+         browser_arc.attr("class", "arc").append("path")
+                                    .attr("d", browser_path)
+                                    .attr("fill", (d) => {return browser_color(d.index*.5)});
+         browser_arc.append("text").text((d)=>{return d.data.key;})
+                                    .attr("transform", function(d) { return "translate(" + browser_path.centroid(d) + ")"; })
+                                    //.attr("font-weight", "bold")
+                                    .attr("dx","-1em");
+                                                       
         });
+
+
+         
+
 
 
 

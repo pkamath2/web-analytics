@@ -1,0 +1,23 @@
+{
+    "PREFERRED_ANIMAL": {
+        "DOG": 5,
+        "CAT":3,
+        "OTHER":3,
+        "OTHER1":0
+    },
+    "BROWSER": {
+        "CHROME": 4,
+        "MOZILLA":2
+    },
+    "DEVICE": {
+        "APPLE": 5,
+        "ANDROID":1,
+        "OTHER":0
+    },
+    "GENDER": {
+        "Female": 3,
+        "Male": 1,
+        "Neutral":2,
+        "More":2
+    }
+}
