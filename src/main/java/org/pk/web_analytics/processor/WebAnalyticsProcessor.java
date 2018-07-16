@@ -11,14 +11,11 @@ import org.apache.kafka.streams.kstream.Predicate;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.pk.web_analytics.bo.Analytics;
+import org.pk.web_analytics.properties.WebAnalyticsConsumerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.EnumerablePropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.PropertySource;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.core.StreamsBuilderFactoryBean;
 
@@ -32,14 +29,14 @@ import java.util.Map;
 public class WebAnalyticsProcessor {
 
     @Autowired
-    Environment env;
+    ObjectMapper objectMapper;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private WebAnalyticsConsumerProperties consumerProperties;
 
     @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
     public StreamsConfig kStreamsConfigs() {
-        Map<String, String> props = getAllKnownProperties(this.env);
+        Map<String, String> props = consumerProperties.getAllKnownProperties();
         return new StreamsConfig(props);
     }
 
@@ -155,28 +152,5 @@ public class WebAnalyticsProcessor {
         return latest_count;
 
     }
-
-
-    //Spring Jira: https://jira.spring.io/browse/SPR-10241
-    //Converting Spring Enviroment to Properties Map
-
-    @SuppressWarnings("Duplicates")
-    public static Map<String, String> getAllKnownProperties(Environment env) {
-        Map<String, String> rtn = new HashMap<>();
-        if (env instanceof ConfigurableEnvironment) {
-            for (PropertySource<?> propertySource : ((ConfigurableEnvironment) env).getPropertySources()) {
-                if (propertySource instanceof EnumerablePropertySource) {
-                    for (String key : ((EnumerablePropertySource) propertySource).getPropertyNames()) {
-                        if(key.startsWith("consumer.")) {
-                            String nkey = key.replace("consumer.", "");
-                            rtn.put(nkey, propertySource.getProperty(key).toString());
-                        }
-                    }
-                }
-            }
-        }
-        return rtn;
-    }
-
 
 }
